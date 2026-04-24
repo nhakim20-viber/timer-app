@@ -1,6 +1,6 @@
 import type { TimeBucket, TimeLog, TimeTrackState } from "@/lib/timetrack-types";
 
-const now = new Date();
+const now = new Date("2026-04-24T12:00:00.000Z");
 
 function isoAtOffset(hoursAgo: number) {
   return new Date(now.getTime() - hoursAgo * 60 * 60 * 1000).toISOString();

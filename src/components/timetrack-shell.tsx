@@ -44,6 +44,15 @@ function toLocalDateTimeValue(date: Date) {
   return local.toISOString().slice(0, 16);
 }
 
+function formatClockTime(value: string) {
+  return new Intl.DateTimeFormat("en", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "UTC",
+  }).format(new Date(value));
+}
+
 function bucketToneClass(color: string) {
   return `bucket-tone-${color}`;
 }
@@ -122,14 +131,16 @@ function DailyLogs({
   buckets,
   suggestions,
   onUpdate,
+  hasMounted,
 }: {
   logs: TimeLog[];
   buckets: Record<string, TimeBucket>;
   suggestions: string[];
   onUpdate: (logId: string, updates: Partial<TimeLog>) => void;
+  hasMounted: boolean;
 }) {
   const [selectedDay, setSelectedDay] = React.useState(() => {
-    const latest = logs[0]?.startTime ?? new Date().toISOString();
+    const latest = logs[0]?.startTime ?? "2026-04-24T12:00:00.000Z";
     return new Date(latest).toISOString().slice(0, 10);
   });
 
@@ -165,9 +176,9 @@ function DailyLogs({
                   <div>
                     <p className="log-title">{bucket?.name ?? "Archived bucket"}</p>
                     <p className="log-meta">
-                      {new Date(log.startTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                      {formatClockTime(log.startTime)}
                       {" — "}
-                      {new Date(log.endTime).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                      {formatClockTime(log.endTime)}
                       {" · "}
                       {formatDuration(log.durationSeconds)}
                     </p>
@@ -193,7 +204,7 @@ function DailyLogs({
                       <span>Start</span>
                       <Input
                         type="datetime-local"
-                        value={toLocalDateTimeValue(new Date(log.startTime))}
+                          value={hasMounted ? toLocalDateTimeValue(new Date(log.startTime)) : ""}
                         onChange={(e) =>
                           onUpdate(log.id, {
                             startTime: new Date(e.target.value).toISOString(),
@@ -205,7 +216,7 @@ function DailyLogs({
                       <span>End</span>
                       <Input
                         type="datetime-local"
-                        value={toLocalDateTimeValue(new Date(log.endTime))}
+                          value={hasMounted ? toLocalDateTimeValue(new Date(log.endTime)) : ""}
                         onChange={(e) =>
                           onUpdate(log.id, {
                             endTime: new Date(e.target.value).toISOString(),
@@ -339,6 +350,7 @@ export function TimeTrackShell() {
     bucketMap,
     activeBucketIds,
     tagSuggestions,
+    hasMounted,
     toggleTimer,
     createBucket,
     archiveBucket,
@@ -349,8 +361,8 @@ export function TimeTrackShell() {
 
   const [bucketDraft, setBucketDraft] = React.useState("");
   const [manualBucketId, setManualBucketId] = React.useState(visibleBuckets[0]?.id ?? "");
-  const [manualStart, setManualStart] = React.useState(() => toLocalDateTimeValue(new Date(Date.now() - 60 * 60 * 1000)));
-  const [manualEnd, setManualEnd] = React.useState(() => toLocalDateTimeValue(new Date()));
+  const [manualStart, setManualStart] = React.useState("");
+  const [manualEnd, setManualEnd] = React.useState("");
   const [manualTags, setManualTags] = React.useState("");
   const [manualNote, setManualNote] = React.useState("");
 
@@ -359,6 +371,12 @@ export function TimeTrackShell() {
       setManualBucketId(visibleBuckets[0].id);
     }
   }, [manualBucketId, visibleBuckets]);
+
+  React.useEffect(() => {
+    if (!hasMounted) return;
+    setManualStart((current) => current || toLocalDateTimeValue(new Date(Date.now() - 60 * 60 * 1000)));
+    setManualEnd((current) => current || toLocalDateTimeValue(new Date()));
+  }, [hasMounted]);
 
   const activeNow = state.activeTimers
     .map((timer) => ({ ...timer, bucket: bucketMap[timer.bucketId] }))
@@ -444,6 +462,7 @@ export function TimeTrackShell() {
             buckets={bucketMap}
             suggestions={tagSuggestions}
             onUpdate={updateLog}
+            hasMounted={hasMounted}
           />
         </div>
 
