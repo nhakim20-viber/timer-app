@@ -39,21 +39,23 @@ function saveState(state: TimeTrackState) {
 }
 
 export function useTimeTrack() {
-  const [state, setState] = React.useState<TimeTrackState>(() => loadState());
+  const [state, setState] = React.useState<TimeTrackState>(initialTimeTrackState);
   const [now, setNow] = React.useState(0);
   const [hasMounted, setHasMounted] = React.useState(false);
 
   React.useEffect(() => {
-    saveState(state);
-  }, [state]);
-
-  React.useEffect(() => {
     setHasMounted(true);
+    setState(loadState());
     setNow(Date.now());
 
     const interval = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(interval);
   }, []);
+
+  React.useEffect(() => {
+    if (!hasMounted) return;
+    saveState(state);
+  }, [hasMounted, state]);
 
   const activeBucketIds = React.useMemo(
     () => new Set(state.activeTimers.map((timer) => timer.bucketId)),
@@ -206,6 +208,7 @@ export function useTimeTrack() {
     activeBucketIds,
     tagSuggestions,
     now,
+    hasMounted,
     toggleTimer,
     createBucket,
     archiveBucket,
