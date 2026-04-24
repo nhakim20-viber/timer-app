@@ -41,6 +41,10 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "TimeTrack — Personal Time Logging" },
+      { name: "twitter:description", content: "Calm personal time logging with multi-timers and neutral reports." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/39e87586-c5aa-4bd1-89ad-a935930c5b37/id-preview-1afd657b--04486530-ecac-4876-9f6c-c6c5b3a32fc5.lovable.app-1777051461488.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/39e87586-c5aa-4bd1-89ad-a935930c5b37/id-preview-1afd657b--04486530-ecac-4876-9f6c-c6c5b3a32fc5.lovable.app-1777051461488.png" },
     ],
     links: [
       {
