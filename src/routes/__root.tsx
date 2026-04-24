@@ -1,5 +1,9 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 
+import "@fontsource/newsreader/500.css";
+import "@fontsource/newsreader/700.css";
+import "@fontsource/manrope/500.css";
+import "@fontsource/manrope/700.css";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -29,11 +33,11 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "TimeTrack — Personal Time Logging" },
+      { name: "description", content: "Calm personal time logging with multi-timers and neutral reports." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "TimeTrack — Personal Time Logging" },
+      { property: "og:description", content: "Calm personal time logging with multi-timers and neutral reports." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
@@ -52,7 +56,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="light">
       <head>
         <HeadContent />
       </head>
