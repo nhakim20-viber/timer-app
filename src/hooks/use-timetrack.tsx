@@ -40,13 +40,17 @@ function saveState(state: TimeTrackState) {
 
 export function useTimeTrack() {
   const [state, setState] = React.useState<TimeTrackState>(() => loadState());
-  const [now, setNow] = React.useState(() => Date.now());
+  const [now, setNow] = React.useState(0);
+  const [hasMounted, setHasMounted] = React.useState(false);
 
   React.useEffect(() => {
     saveState(state);
   }, [state]);
 
   React.useEffect(() => {
+    setHasMounted(true);
+    setNow(Date.now());
+
     const interval = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(interval);
   }, []);
@@ -186,11 +190,13 @@ export function useTimeTrack() {
 
   const getElapsedSeconds = React.useCallback(
     (bucketId: string) => {
+      if (!hasMounted) return 0;
+
       const active = state.activeTimers.find((timer) => timer.bucketId === bucketId);
       if (!active) return 0;
       return Math.max(0, Math.round((now - new Date(active.startedAt).getTime()) / 1000));
     },
-    [now, state.activeTimers],
+    [hasMounted, now, state.activeTimers],
   );
 
   return {
