@@ -381,11 +381,19 @@ export function TimeTrackShell() {
   return (
     <main className="timetrack-app">
       <Card className="panel-card buckets-hero-card">
+        <CardContent className="bucket-grid bucket-grid-large">
+          {visibleBuckets.map((bucket) => (
+            <BucketCard
+              key={bucket.id}
+              bucket={bucket}
+              isActive={activeBucketIds.has(bucket.id)}
+              elapsedSeconds={getElapsedSeconds(bucket.id)}
+              onToggle={() => toggleTimer(bucket.id)}
+              onArchive={() => archiveBucket(bucket.id)}
+            />
+          ))}
+        </CardContent>
         <CardHeader className="panel-header-row">
-          <div>
-            <CardTitle className="text-3xl">Your buckets</CardTitle>
-            <CardDescription>Tap any bucket to start or stop. Run as many as you like at once.</CardDescription>
-          </div>
           <form
             className="bucket-create-row"
             onSubmit={(e) => {
@@ -404,18 +412,6 @@ export function TimeTrackShell() {
             </Button>
           </form>
         </CardHeader>
-        <CardContent className="bucket-grid bucket-grid-large">
-          {visibleBuckets.map((bucket) => (
-            <BucketCard
-              key={bucket.id}
-              bucket={bucket}
-              isActive={activeBucketIds.has(bucket.id)}
-              elapsedSeconds={getElapsedSeconds(bucket.id)}
-              onToggle={() => toggleTimer(bucket.id)}
-              onArchive={() => archiveBucket(bucket.id)}
-            />
-          ))}
-        </CardContent>
       </Card>
 
       <StatsStrip logs={state.logs} buckets={visibleBuckets} activeCount={state.activeTimers.length} />
