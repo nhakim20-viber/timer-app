@@ -13,6 +13,29 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTimeTrack } from "@/hooks/use-timetrack";
 import type { ReportWindow, TimeBucket, TimeLog } from "@/lib/timetrack-types";
+import { Link } from "@tanstack/react-router";
+
+export function TimeTrackNav() {
+  return (
+    <nav className="timetrack-nav" aria-label="Primary">
+      <Link
+        to="/"
+        activeOptions={{ exact: true }}
+        activeProps={{ className: "timetrack-nav-link is-active" }}
+        inactiveProps={{ className: "timetrack-nav-link" }}
+      >
+        Timers
+      </Link>
+      <Link
+        to="/reports"
+        activeProps={{ className: "timetrack-nav-link is-active" }}
+        inactiveProps={{ className: "timetrack-nav-link" }}
+      >
+        Reports
+      </Link>
+    </nav>
+  );
+}
 
 function formatDuration(totalSeconds: number) {
   const hours = Math.floor(totalSeconds / 3600);
@@ -258,7 +281,7 @@ function DailyLogs({
   );
 }
 
-function ReportPanel({ logs, buckets }: { logs: TimeLog[]; buckets: Record<string, TimeBucket> }) {
+export function ReportPanel({ logs, buckets }: { logs: TimeLog[]; buckets: Record<string, TimeBucket> }) {
   const [window, setWindow] = React.useState<ReportWindow>("week");
   const [tagFilter, setTagFilter] = React.useState("");
 
@@ -380,6 +403,7 @@ export function TimeTrackShell() {
 
   return (
     <main className="timetrack-app">
+      <TimeTrackNav />
       <Card className="panel-card buckets-hero-card">
         <CardContent className="bucket-grid bucket-grid-large">
           {visibleBuckets.map((bucket) => (
@@ -493,7 +517,7 @@ export function TimeTrackShell() {
 
 
 
-          <ReportPanel logs={state.logs} buckets={bucketMap} />
+          
         </aside>
       </section>
     </main>
