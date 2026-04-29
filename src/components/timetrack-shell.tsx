@@ -258,7 +258,7 @@ function DailyLogs({
   );
 }
 
-function ReportPanel({ logs, buckets }: { logs: TimeLog[]; buckets: Record<string, TimeBucket> }) {
+export function ReportPanel({ logs, buckets }: { logs: TimeLog[]; buckets: Record<string, TimeBucket> }) {
   const [window, setWindow] = React.useState<ReportWindow>("week");
   const [tagFilter, setTagFilter] = React.useState("");
 
