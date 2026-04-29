@@ -192,6 +192,48 @@ export function useTimeTrack() {
     }));
   }, []);
 
+  function normalizeTag(raw: string) {
+    const trimmed = raw.trim().replace(/\s+/g, "");
+    if (!trimmed) return "";
+    return trimmed.startsWith("#") ? trimmed : `#${trimmed}`;
+  }
+
+  const toggleActiveTimerTag = React.useCallback((bucketId: string, tag: string) => {
+    const normalized = normalizeTag(tag);
+    if (!normalized) return;
+    setState((current) => ({
+      ...current,
+      activeTimers: current.activeTimers.map((timer) => {
+        if (timer.bucketId !== bucketId) return timer;
+        const has = timer.selectedTags.includes(normalized);
+        return {
+          ...timer,
+          selectedTags: has
+            ? timer.selectedTags.filter((t) => t !== normalized)
+            : [...timer.selectedTags, normalized],
+        };
+      }),
+    }));
+  }, []);
+
+  const addBucketTag = React.useCallback((bucketId: string, tag: string) => {
+    const normalized = normalizeTag(tag);
+    if (!normalized) return;
+    setState((current) => ({
+      ...current,
+      buckets: current.buckets.map((bucket) => {
+        if (bucket.id !== bucketId) return bucket;
+        if (bucket.presetTags.includes(normalized)) return bucket;
+        return { ...bucket, presetTags: [...bucket.presetTags, normalized] };
+      }),
+      activeTimers: current.activeTimers.map((timer) => {
+        if (timer.bucketId !== bucketId) return timer;
+        if (timer.selectedTags.includes(normalized)) return timer;
+        return { ...timer, selectedTags: [...timer.selectedTags, normalized] };
+      }),
+    }));
+  }, []);
+
   const bucketMap = React.useMemo(
     () => Object.fromEntries(state.buckets.map((bucket) => [bucket.id, bucket])),
     [state.buckets],
