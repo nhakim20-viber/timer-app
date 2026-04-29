@@ -380,6 +380,7 @@ export function TimeTrackShell() {
 
   return (
     <main className="timetrack-app">
+      <TimeTrackNav />
       <Card className="panel-card buckets-hero-card">
         <CardContent className="bucket-grid bucket-grid-large">
           {visibleBuckets.map((bucket) => (
