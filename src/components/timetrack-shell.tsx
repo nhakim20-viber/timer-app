@@ -376,9 +376,7 @@ export function TimeTrackShell() {
     setManualEnd((current) => current || toLocalDateTimeValue(new Date()));
   }, [hasMounted]);
 
-  const activeNow = state.activeTimers
-    .map((timer) => ({ ...timer, bucket: bucketMap[timer.bucketId] }))
-    .filter((timer) => timer.bucket);
+
 
   return (
     <main className="timetrack-app">
