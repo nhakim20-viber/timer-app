@@ -493,7 +493,7 @@ export function TimeTrackShell() {
 
 
 
-          <ReportPanel logs={state.logs} buckets={bucketMap} />
+          
         </aside>
       </section>
     </main>
