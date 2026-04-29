@@ -1,12 +1,10 @@
 import * as React from "react";
 import {
-  BarChart3,
   CalendarDays,
   Clock3,
   PauseCircle,
   PlayCircle,
   Plus,
-  Tags,
   Trash2,
 } from "lucide-react";
 
