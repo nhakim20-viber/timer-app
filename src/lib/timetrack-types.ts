@@ -22,6 +22,7 @@ export type TimeLog = {
 export type ActiveTimer = {
   bucketId: string;
   startedAt: string;
+  selectedTags: string[];
 };
 
 export type ReportWindow = "week" | "month" | "session";
