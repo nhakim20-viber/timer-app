@@ -123,6 +123,7 @@ export function useTimeTrack() {
         color,
         archivedAt: null,
         createdAt: new Date().toISOString(),
+        presetTags: [],
       };
 
       return { ...current, buckets: [nextBucket, ...current.buckets] };
