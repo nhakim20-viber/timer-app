@@ -141,6 +141,18 @@
     @apply mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-8 px-4 py-6 sm:px-6 lg:px-8 lg:py-8;
   }
 
+  .timetrack-nav {
+    @apply flex items-center gap-2 border-b border-border pb-3;
+  }
+
+  .timetrack-nav-link {
+    @apply rounded-full px-4 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground;
+  }
+
+  .timetrack-nav-link.is-active {
+    @apply bg-foreground text-background;
+  }
+
   .hero-band {
     @apply grid gap-4 border border-border p-5 shadow-[var(--shadow-soft)] md:grid-cols-[1.6fr_0.9fr] md:items-end;
     border-radius: 1.25rem;
