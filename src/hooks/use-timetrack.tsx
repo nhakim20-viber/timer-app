@@ -264,5 +264,7 @@ export function useTimeTrack() {
     addManualLog,
     updateLog,
     getElapsedSeconds,
+    toggleActiveTimerTag,
+    addBucketTag,
   };
 }
