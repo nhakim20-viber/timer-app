@@ -69,29 +69,30 @@ function BucketCard({
   onArchive: () => void;
 }) {
   return (
-    <article className={`bucket-panel ${bucketToneClass(bucket.color)} ${isActive ? "is-active" : ""}`}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="bucket-label">Bucket</p>
-          <h3 className="bucket-name">{bucket.name}</h3>
-        </div>
-        <button className="icon-action" onClick={onArchive} aria-label={`Archive ${bucket.name}`}>
-          <Trash2 />
-        </button>
-      </div>
-
-      <div className="mt-6 flex items-end justify-between gap-4">
-        <div>
-          <p className="bucket-label">Elapsed</p>
-          <p className="bucket-time">{isActive ? formatDuration(elapsedSeconds) : "Ready"}</p>
-        </div>
-
-        <Button variant={isActive ? "timerStop" : "timerStart"} size="pill" onClick={onToggle}>
+    <div className={`bucket-tile-wrap ${bucketToneClass(bucket.color)} ${isActive ? "is-active" : ""}`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="bucket-tile"
+        aria-pressed={isActive}
+        aria-label={`${isActive ? "Stop" : "Start"} ${bucket.name} timer`}
+      >
+        <span className="bucket-tile-icon" aria-hidden="true">
           {isActive ? <PauseCircle /> : <PlayCircle />}
-          {isActive ? "Stop" : "Start"}
-        </Button>
-      </div>
-    </article>
+        </span>
+        <span className="bucket-tile-name">{bucket.name}</span>
+        <span className="bucket-tile-time">{isActive ? formatDuration(elapsedSeconds) : "Tap to start"}</span>
+        <span className="bucket-tile-status">{isActive ? "Running · tap to stop" : "Idle"}</span>
+      </button>
+      <button
+        type="button"
+        className="bucket-tile-archive"
+        onClick={onArchive}
+        aria-label={`Archive ${bucket.name}`}
+      >
+        <Trash2 />
+      </button>
+    </div>
   );
 }
 
