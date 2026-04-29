@@ -82,7 +82,7 @@ function BucketCard({
         </span>
         <span className="bucket-tile-name">{bucket.name}</span>
         <span className="bucket-tile-time">{isActive ? formatDuration(elapsedSeconds) : "Tap to start"}</span>
-        <span className="bucket-tile-status">{isActive ? "Running · tap to stop" : "Idle"}</span>
+        {isActive ? <span className="bucket-tile-status">Running · tap to stop</span> : null}
       </button>
       <button
         type="button"
