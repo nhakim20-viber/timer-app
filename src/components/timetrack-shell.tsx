@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   CalendarDays,
-  Clock3,
   PauseCircle,
   PlayCircle,
   Plus,
