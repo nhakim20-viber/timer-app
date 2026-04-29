@@ -442,7 +442,14 @@ export function TimeTrackShell() {
     addManualLog,
     updateLog,
     getElapsedSeconds,
+    toggleActiveTimerTag,
+    addBucketTag,
   } = useTimeTrack();
+
+  const activeTimerMap = React.useMemo(
+    () => Object.fromEntries(state.activeTimers.map((t) => [t.bucketId, t])),
+    [state.activeTimers],
+  );
 
   const [bucketDraft, setBucketDraft] = React.useState("");
   const [manualBucketId, setManualBucketId] = React.useState(visibleBuckets[0]?.id ?? "");
