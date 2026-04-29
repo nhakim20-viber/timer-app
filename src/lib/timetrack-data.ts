@@ -15,6 +15,7 @@ export const seedBuckets: TimeBucket[] = [
     color: "rust",
     archivedAt: null,
     createdAt: isoAtOffset(240),
+    presetTags: ["#train", "#office"],
   },
   {
     id: "bucket-podcasts",
@@ -22,6 +23,7 @@ export const seedBuckets: TimeBucket[] = [
     color: "ink",
     archivedAt: null,
     createdAt: isoAtOffset(230),
+    presetTags: ["#basketball", "#analysis"],
   },
   {
     id: "bucket-exercise",
@@ -29,6 +31,7 @@ export const seedBuckets: TimeBucket[] = [
     color: "sage",
     archivedAt: null,
     createdAt: isoAtOffset(220),
+    presetTags: ["#strength"],
   },
   {
     id: "bucket-cooking",
@@ -36,6 +39,7 @@ export const seedBuckets: TimeBucket[] = [
     color: "amber",
     archivedAt: null,
     createdAt: isoAtOffset(210),
+    presetTags: ["#dinner"],
   },
 ];
 
