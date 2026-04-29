@@ -491,6 +491,67 @@
     --tone-color: oklch(0.77 0.12 83.1);
   }
 
+  .day-view {
+    @apply flex flex-col gap-4;
+  }
+
+  .day-view-controls {
+    @apply flex items-center gap-3 flex-wrap;
+  }
+
+  .day-view-date {
+    @apply max-w-[180px];
+  }
+
+  .day-view-label {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .day-view-grid {
+    @apply relative grid w-full overflow-hidden rounded-lg border;
+    grid-template-columns: 64px 1fr;
+    background: var(--card);
+  }
+
+  .day-view-hours {
+    @apply flex flex-col border-r;
+    border-color: var(--border);
+  }
+
+  .day-view-hour {
+    @apply relative text-[11px] text-muted-foreground;
+  }
+
+  .day-view-hour > span {
+    @apply absolute -top-1.5 right-2;
+  }
+
+  .day-view-events {
+    @apply relative;
+  }
+
+  .day-view-row {
+    @apply border-b;
+    border-color: color-mix(in oklab, var(--border) 50%, transparent);
+  }
+
+  .day-view-event {
+    @apply absolute left-2 right-2 rounded-md px-2 py-1 text-xs overflow-hidden shadow-sm;
+    background: color-mix(in oklab, var(--tone-color, var(--chart-3)) 22%, var(--card));
+    border-left: 3px solid var(--tone-color, var(--chart-3));
+  }
+
+  .day-view-event-title {
+    @apply font-semibold text-foreground truncate;
+  }
+
+  .day-view-event-meta {
+    @apply text-[11px] text-muted-foreground truncate;
+  }
+
+  .day-view-event-tags {
+    @apply text-[11px] text-foreground/70 truncate;
+  }
   @media (max-width: 900px) {
     .log-row {
       grid-template-columns: 1fr;
