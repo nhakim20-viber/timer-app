@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  CalendarDays,
   PauseCircle,
   PlayCircle,
   Plus,
@@ -53,11 +52,6 @@ function formatDurationCompact(totalSeconds: number) {
   return `${(totalSeconds / 3600).toFixed(totalSeconds >= 3600 ? 1 : 2)}h`;
 }
 
-function startOfDay(value: string) {
-  const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
-  return date.getTime();
-}
 
 function toLocalDateTimeValue(date: Date) {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
@@ -211,139 +205,6 @@ function StatsStrip({ logs, buckets, activeCount }: { logs: TimeLog[]; buckets: 
   );
 }
 
-function DailyLogs({
-  logs,
-  buckets,
-  suggestions,
-  onUpdate,
-  hasMounted,
-}: {
-  logs: TimeLog[];
-  buckets: Record<string, TimeBucket>;
-  suggestions: string[];
-  onUpdate: (logId: string, updates: Partial<TimeLog>) => void;
-  hasMounted: boolean;
-}) {
-  const [selectedDay, setSelectedDay] = React.useState(() => {
-    const latest = logs[0]?.startTime ?? "2026-04-24T12:00:00.000Z";
-    return new Date(latest).toISOString().slice(0, 10);
-  });
-
-  const [editingId, setEditingId] = React.useState<string | null>(null);
-  const [draftTags, setDraftTags] = React.useState("");
-  const dayStart = startOfDay(`${selectedDay}T00:00:00`);
-
-  const dayLogs = logs.filter((log) => startOfDay(log.startTime) === dayStart);
-
-  return (
-    <Card className="panel-card">
-      <CardHeader className="panel-header-row">
-        <div>
-          <CardTitle>Timelog list</CardTitle>
-          <CardDescription>Edit sessions without losing the audit trail.</CardDescription>
-        </div>
-        <div className="day-picker-wrap">
-          <CalendarDays />
-          <Input type="date" value={selectedDay} onChange={(e) => setSelectedDay(e.target.value)} />
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {dayLogs.length === 0 ? (
-          <div className="empty-state">No sessions recorded for this day.</div>
-        ) : (
-          dayLogs.map((log) => {
-            const bucket = buckets[log.bucketId];
-            const isEditing = editingId === log.id;
-            return (
-              <div key={log.id} className="log-row">
-                <div className="log-main">
-                  <div className={`tone-dot ${bucketToneClass(bucket?.color ?? "ink")}`} />
-                  <div>
-                    <p className="log-title">{bucket?.name ?? "Archived bucket"}</p>
-                    <p className="log-meta">
-                      {formatClockTime(log.startTime)}
-                      {" — "}
-                      {formatClockTime(log.endTime)}
-                      {" · "}
-                      {formatDuration(log.durationSeconds)}
-                    </p>
-                  </div>
-                </div>
-                <div className="log-tags">{log.tags.length ? log.tags.join(" ") : "No tags"}</div>
-                <div className="log-actions">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      setEditingId(isEditing ? null : log.id);
-                      setDraftTags(log.tags.join(" "));
-                    }}
-                  >
-                    {isEditing ? "Close" : "Edit"}
-                  </Button>
-                </div>
-
-                {isEditing ? (
-                  <div className="log-editor">
-                    <label>
-                      <span>Start</span>
-                      <Input
-                        type="datetime-local"
-                          value={hasMounted ? toLocalDateTimeValue(new Date(log.startTime)) : ""}
-                        onChange={(e) =>
-                          onUpdate(log.id, {
-                            startTime: new Date(e.target.value).toISOString(),
-                          })
-                        }
-                      />
-                    </label>
-                    <label>
-                      <span>End</span>
-                      <Input
-                        type="datetime-local"
-                          value={hasMounted ? toLocalDateTimeValue(new Date(log.endTime)) : ""}
-                        onChange={(e) =>
-                          onUpdate(log.id, {
-                            endTime: new Date(e.target.value).toISOString(),
-                          })
-                        }
-                      />
-                    </label>
-                    <label className="md:col-span-2">
-                      <span>Tags</span>
-                      <Input
-                        value={draftTags}
-                        onChange={(e) => setDraftTags(e.target.value)}
-                        onBlur={() =>
-                          onUpdate(log.id, {
-                            tags: draftTags
-                              .split(/\s+/)
-                              .map((tag) => tag.trim())
-                              .filter(Boolean)
-                              .map((tag) => (tag.startsWith("#") ? tag : `#${tag}`)),
-                          })
-                        }
-                        placeholder={suggestions.slice(0, 4).join(" ") || "#commute #basketball"}
-                      />
-                    </label>
-                    <label className="md:col-span-2">
-                      <span>Note</span>
-                      <Input
-                        value={log.note}
-                        onChange={(e) => onUpdate(log.id, { note: e.target.value })}
-                        placeholder="Optional context"
-                      />
-                    </label>
-                  </div>
-                ) : null}
-              </div>
-            );
-          })
-        )}
-      </CardContent>
-    </Card>
-  );
-}
 
 function DayCalendarView({
   logs,
@@ -537,7 +398,6 @@ export function TimeTrackShell() {
   const {
     state,
     visibleBuckets,
-    bucketMap,
     activeBucketIds,
     tagSuggestions,
     hasMounted,
@@ -545,7 +405,6 @@ export function TimeTrackShell() {
     createBucket,
     archiveBucket,
     addManualLog,
-    updateLog,
     getElapsedSeconds,
     toggleActiveTimerTag,
     addBucketTag,
@@ -619,17 +478,6 @@ export function TimeTrackShell() {
 
 
       <section className="layout-grid">
-        <div className="primary-column">
-
-          <DailyLogs
-            logs={[...state.logs].sort((a, b) => +new Date(b.startTime) - +new Date(a.startTime))}
-            buckets={bucketMap}
-            suggestions={tagSuggestions}
-            onUpdate={updateLog}
-            hasMounted={hasMounted}
-          />
-        </div>
-
         <aside className="secondary-column">
           <Card className="panel-card">
             <CardHeader>
@@ -693,10 +541,6 @@ export function TimeTrackShell() {
               </form>
             </CardContent>
           </Card>
-
-
-
-          
         </aside>
       </section>
     </main>
