@@ -414,7 +414,6 @@ export function TimeTrackShell() {
         </CardHeader>
       </Card>
 
-      <StatsStrip logs={state.logs} buckets={visibleBuckets} activeCount={state.activeTimers.length} />
 
       <section className="layout-grid">
         <div className="primary-column">
