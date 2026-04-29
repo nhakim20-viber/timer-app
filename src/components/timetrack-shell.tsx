@@ -483,8 +483,11 @@ export function TimeTrackShell() {
               bucket={bucket}
               isActive={activeBucketIds.has(bucket.id)}
               elapsedSeconds={getElapsedSeconds(bucket.id)}
+              selectedTags={activeTimerMap[bucket.id]?.selectedTags ?? []}
               onToggle={() => toggleTimer(bucket.id)}
               onArchive={() => archiveBucket(bucket.id)}
+              onToggleTag={(tag) => toggleActiveTimerTag(bucket.id, tag)}
+              onAddTag={(tag) => addBucketTag(bucket.id, tag)}
             />
           ))}
         </CardContent>
