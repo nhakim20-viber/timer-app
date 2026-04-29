@@ -619,17 +619,6 @@ export function TimeTrackShell() {
 
 
       <section className="layout-grid">
-        <div className="primary-column">
-
-          <DailyLogs
-            logs={[...state.logs].sort((a, b) => +new Date(b.startTime) - +new Date(a.startTime))}
-            buckets={bucketMap}
-            suggestions={tagSuggestions}
-            onUpdate={updateLog}
-            hasMounted={hasMounted}
-          />
-        </div>
-
         <aside className="secondary-column">
           <Card className="panel-card">
             <CardHeader>
@@ -693,10 +682,6 @@ export function TimeTrackShell() {
               </form>
             </CardContent>
           </Card>
-
-
-
-          
         </aside>
       </section>
     </main>
