@@ -25,7 +25,7 @@ export type ActiveTimer = {
   selectedTags: string[];
 };
 
-export type ReportWindow = "week" | "month" | "session";
+export type ReportWindow = "day" | "week" | "month" | "session";
 
 export type TimeTrackState = {
   buckets: TimeBucket[];
