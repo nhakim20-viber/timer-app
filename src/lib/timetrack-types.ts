@@ -4,6 +4,7 @@ export type TimeBucket = {
   color: string;
   archivedAt: string | null;
   createdAt: string;
+  presetTags: string[];
 };
 
 export type TimeLog = {
@@ -21,6 +22,7 @@ export type TimeLog = {
 export type ActiveTimer = {
   bucketId: string;
   startedAt: string;
+  selectedTags: string[];
 };
 
 export type ReportWindow = "week" | "month" | "session";

@@ -81,15 +81,24 @@ function BucketCard({
   bucket,
   isActive,
   elapsedSeconds,
+  selectedTags,
   onToggle,
   onArchive,
+  onToggleTag,
+  onAddTag,
 }: {
   bucket: TimeBucket;
   isActive: boolean;
   elapsedSeconds: number;
+  selectedTags: string[];
   onToggle: () => void;
   onArchive: () => void;
+  onToggleTag: (tag: string) => void;
+  onAddTag: (tag: string) => void;
 }) {
+  const [tagDraft, setTagDraft] = React.useState("");
+  const [adding, setAdding] = React.useState(false);
+
   return (
     <div className={`bucket-tile-wrap ${bucketToneClass(bucket.color)} ${isActive ? "is-active" : ""}`}>
       <button
@@ -106,6 +115,61 @@ function BucketCard({
         <span className="bucket-tile-time">{isActive ? formatDuration(elapsedSeconds) : "Tap to start"}</span>
         {isActive ? <span className="bucket-tile-status">Running · tap to stop</span> : null}
       </button>
+
+      {isActive ? (
+        <div className="bucket-tile-tags" onClick={(e) => e.stopPropagation()}>
+          {bucket.presetTags.map((tag) => {
+            const on = selectedTags.includes(tag);
+            return (
+              <button
+                key={tag}
+                type="button"
+                className={`bucket-tag-chip ${on ? "is-on" : ""}`}
+                aria-pressed={on}
+                onClick={() => onToggleTag(tag)}
+              >
+                {tag}
+              </button>
+            );
+          })}
+          {adding ? (
+            <form
+              className="bucket-tag-add-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (tagDraft.trim()) {
+                  onAddTag(tagDraft);
+                  setTagDraft("");
+                }
+                setAdding(false);
+              }}
+            >
+              <input
+                autoFocus
+                value={tagDraft}
+                onChange={(e) => setTagDraft(e.target.value)}
+                onBlur={() => {
+                  if (tagDraft.trim()) onAddTag(tagDraft);
+                  setTagDraft("");
+                  setAdding(false);
+                }}
+                placeholder="new tag"
+                className="bucket-tag-input"
+              />
+            </form>
+          ) : (
+            <button
+              type="button"
+              className="bucket-tag-chip bucket-tag-add"
+              onClick={() => setAdding(true)}
+              aria-label="Add tag"
+            >
+              + add tag
+            </button>
+          )}
+        </div>
+      ) : null}
+
       <button
         type="button"
         className="bucket-tile-archive"
@@ -378,7 +442,14 @@ export function TimeTrackShell() {
     addManualLog,
     updateLog,
     getElapsedSeconds,
+    toggleActiveTimerTag,
+    addBucketTag,
   } = useTimeTrack();
+
+  const activeTimerMap = React.useMemo(
+    () => Object.fromEntries(state.activeTimers.map((t) => [t.bucketId, t])),
+    [state.activeTimers],
+  );
 
   const [bucketDraft, setBucketDraft] = React.useState("");
   const [manualBucketId, setManualBucketId] = React.useState(visibleBuckets[0]?.id ?? "");
@@ -412,8 +483,11 @@ export function TimeTrackShell() {
               bucket={bucket}
               isActive={activeBucketIds.has(bucket.id)}
               elapsedSeconds={getElapsedSeconds(bucket.id)}
+              selectedTags={activeTimerMap[bucket.id]?.selectedTags ?? []}
               onToggle={() => toggleTimer(bucket.id)}
               onArchive={() => archiveBucket(bucket.id)}
+              onToggleTag={(tag) => toggleActiveTimerTag(bucket.id, tag)}
+              onAddTag={(tag) => addBucketTag(bucket.id, tag)}
             />
           ))}
         </CardContent>

@@ -24,7 +24,13 @@ function loadState(): TimeTrackState {
       return initialTimeTrackState;
     }
 
-    return JSON.parse(raw) as TimeTrackState;
+    const parsed = JSON.parse(raw) as TimeTrackState;
+    // Migrate older persisted state that lacks new fields.
+    return {
+      ...parsed,
+      buckets: (parsed.buckets ?? []).map((b) => ({ ...b, presetTags: b.presetTags ?? [] })),
+      activeTimers: (parsed.activeTimers ?? []).map((t) => ({ ...t, selectedTags: t.selectedTags ?? [] })),
+    };
   } catch {
     return initialTimeTrackState;
   }
@@ -87,7 +93,7 @@ export function useTimeTrack() {
           startTime: active.startedAt,
           endTime: timestamp,
           durationSeconds: Math.max(60, Math.round((ended - started) / 1000)),
-          tags: [],
+          tags: active.selectedTags ?? [],
           note: "",
           createdAt: timestamp,
           updatedAt: timestamp,
@@ -100,7 +106,7 @@ export function useTimeTrack() {
         };
       }
 
-      const nextTimer: ActiveTimer = { bucketId, startedAt: timestamp };
+      const nextTimer: ActiveTimer = { bucketId, startedAt: timestamp, selectedTags: [] };
       return { ...current, activeTimers: [nextTimer, ...current.activeTimers] };
     });
   }, []);
@@ -117,6 +123,7 @@ export function useTimeTrack() {
         color,
         archivedAt: null,
         createdAt: new Date().toISOString(),
+        presetTags: [],
       };
 
       return { ...current, buckets: [nextBucket, ...current.buckets] };
@@ -185,6 +192,48 @@ export function useTimeTrack() {
     }));
   }, []);
 
+  function normalizeTag(raw: string) {
+    const trimmed = raw.trim().replace(/\s+/g, "");
+    if (!trimmed) return "";
+    return trimmed.startsWith("#") ? trimmed : `#${trimmed}`;
+  }
+
+  const toggleActiveTimerTag = React.useCallback((bucketId: string, tag: string) => {
+    const normalized = normalizeTag(tag);
+    if (!normalized) return;
+    setState((current) => ({
+      ...current,
+      activeTimers: current.activeTimers.map((timer) => {
+        if (timer.bucketId !== bucketId) return timer;
+        const has = timer.selectedTags.includes(normalized);
+        return {
+          ...timer,
+          selectedTags: has
+            ? timer.selectedTags.filter((t) => t !== normalized)
+            : [...timer.selectedTags, normalized],
+        };
+      }),
+    }));
+  }, []);
+
+  const addBucketTag = React.useCallback((bucketId: string, tag: string) => {
+    const normalized = normalizeTag(tag);
+    if (!normalized) return;
+    setState((current) => ({
+      ...current,
+      buckets: current.buckets.map((bucket) => {
+        if (bucket.id !== bucketId) return bucket;
+        if (bucket.presetTags.includes(normalized)) return bucket;
+        return { ...bucket, presetTags: [...bucket.presetTags, normalized] };
+      }),
+      activeTimers: current.activeTimers.map((timer) => {
+        if (timer.bucketId !== bucketId) return timer;
+        if (timer.selectedTags.includes(normalized)) return timer;
+        return { ...timer, selectedTags: [...timer.selectedTags, normalized] };
+      }),
+    }));
+  }, []);
+
   const bucketMap = React.useMemo(
     () => Object.fromEntries(state.buckets.map((bucket) => [bucket.id, bucket])),
     [state.buckets],
@@ -215,5 +264,7 @@ export function useTimeTrack() {
     addManualLog,
     updateLog,
     getElapsedSeconds,
+    toggleActiveTimerTag,
+    addBucketTag,
   };
 }
