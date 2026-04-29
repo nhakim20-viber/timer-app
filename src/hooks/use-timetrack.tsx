@@ -93,7 +93,7 @@ export function useTimeTrack() {
           startTime: active.startedAt,
           endTime: timestamp,
           durationSeconds: Math.max(60, Math.round((ended - started) / 1000)),
-          tags: [],
+          tags: active.selectedTags ?? [],
           note: "",
           createdAt: timestamp,
           updatedAt: timestamp,
@@ -106,7 +106,7 @@ export function useTimeTrack() {
         };
       }
 
-      const nextTimer: ActiveTimer = { bucketId, startedAt: timestamp };
+      const nextTimer: ActiveTimer = { bucketId, startedAt: timestamp, selectedTags: [] };
       return { ...current, activeTimers: [nextTimer, ...current.activeTimers] };
     });
   }, []);
