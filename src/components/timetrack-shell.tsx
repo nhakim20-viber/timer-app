@@ -526,35 +526,7 @@ export function TimeTrackShell() {
             </CardContent>
           </Card>
 
-          <Card className="panel-card utility-card">
-            <CardHeader>
-              <CardTitle>Design principles</CardTitle>
-              <CardDescription>Translated directly from the PRD.</CardDescription>
-            </CardHeader>
-            <CardContent className="principles-list">
-              <div>
-                <PlayCircle />
-                <div>
-                  <strong>Frictionless entry</strong>
-                  <p>Start from the home view in a single click.</p>
-                </div>
-              </div>
-              <div>
-                <Tags />
-                <div>
-                  <strong>Cross-bucket tags</strong>
-                  <p>Slice the same tag across podcasts, TV, exercise, and more.</p>
-                </div>
-              </div>
-              <div>
-                <BarChart3 />
-                <div>
-                  <strong>Readable reports</strong>
-                  <p>Tables and bars first; no scores, streaks, or moralizing.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
 
           <ReportPanel logs={state.logs} buckets={bucketMap} />
         </aside>
