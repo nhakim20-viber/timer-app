@@ -104,5 +104,5 @@ export const seedLogs: TimeLog[] = [
 export const initialTimeTrackState: TimeTrackState = {
   buckets: seedBuckets,
   logs: seedLogs,
-  activeTimers: [{ bucketId: "bucket-commute", startedAt: isoAtOffset(0.5) }],
+  activeTimers: [{ bucketId: "bucket-commute", startedAt: isoAtOffset(0.5), selectedTags: [] }],
 };
