@@ -24,7 +24,13 @@ function loadState(): TimeTrackState {
       return initialTimeTrackState;
     }
 
-    return JSON.parse(raw) as TimeTrackState;
+    const parsed = JSON.parse(raw) as TimeTrackState;
+    // Migrate older persisted state that lacks new fields.
+    return {
+      ...parsed,
+      buckets: (parsed.buckets ?? []).map((b) => ({ ...b, presetTags: b.presetTags ?? [] })),
+      activeTimers: (parsed.activeTimers ?? []).map((t) => ({ ...t, selectedTags: t.selectedTags ?? [] })),
+    };
   } catch {
     return initialTimeTrackState;
   }
