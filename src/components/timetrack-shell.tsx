@@ -69,29 +69,30 @@ function BucketCard({
   onArchive: () => void;
 }) {
   return (
-    <article className={`bucket-panel ${bucketToneClass(bucket.color)} ${isActive ? "is-active" : ""}`}>
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="bucket-label">Bucket</p>
-          <h3 className="bucket-name">{bucket.name}</h3>
-        </div>
-        <button className="icon-action" onClick={onArchive} aria-label={`Archive ${bucket.name}`}>
-          <Trash2 />
-        </button>
-      </div>
-
-      <div className="mt-6 flex items-end justify-between gap-4">
-        <div>
-          <p className="bucket-label">Elapsed</p>
-          <p className="bucket-time">{isActive ? formatDuration(elapsedSeconds) : "Ready"}</p>
-        </div>
-
-        <Button variant={isActive ? "timerStop" : "timerStart"} size="pill" onClick={onToggle}>
+    <div className={`bucket-tile-wrap ${bucketToneClass(bucket.color)} ${isActive ? "is-active" : ""}`}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="bucket-tile"
+        aria-pressed={isActive}
+        aria-label={`${isActive ? "Stop" : "Start"} ${bucket.name} timer`}
+      >
+        <span className="bucket-tile-icon" aria-hidden="true">
           {isActive ? <PauseCircle /> : <PlayCircle />}
-          {isActive ? "Stop" : "Start"}
-        </Button>
-      </div>
-    </article>
+        </span>
+        <span className="bucket-tile-name">{bucket.name}</span>
+        <span className="bucket-tile-time">{isActive ? formatDuration(elapsedSeconds) : "Tap to start"}</span>
+        <span className="bucket-tile-status">{isActive ? "Running · tap to stop" : "Idle"}</span>
+      </button>
+      <button
+        type="button"
+        className="bucket-tile-archive"
+        onClick={onArchive}
+        aria-label={`Archive ${bucket.name}`}
+      >
+        <Trash2 />
+      </button>
+    </div>
   );
 }
 
@@ -409,47 +410,48 @@ export function TimeTrackShell() {
         </div>
       </section>
 
+      <Card className="panel-card buckets-hero-card">
+        <CardHeader className="panel-header-row">
+          <div>
+            <CardTitle className="text-3xl">Your buckets</CardTitle>
+            <CardDescription>Tap any bucket to start or stop. Run as many as you like at once.</CardDescription>
+          </div>
+          <form
+            className="bucket-create-row"
+            onSubmit={(e) => {
+              e.preventDefault();
+              createBucket(bucketDraft);
+              setBucketDraft("");
+            }}
+          >
+            <Input
+              value={bucketDraft}
+              onChange={(e) => setBucketDraft(e.target.value)}
+              placeholder="Add bucket"
+            />
+            <Button type="submit" variant="secondary" size="icon" aria-label="Add bucket">
+              <Plus />
+            </Button>
+          </form>
+        </CardHeader>
+        <CardContent className="bucket-grid bucket-grid-large">
+          {visibleBuckets.map((bucket) => (
+            <BucketCard
+              key={bucket.id}
+              bucket={bucket}
+              isActive={activeBucketIds.has(bucket.id)}
+              elapsedSeconds={getElapsedSeconds(bucket.id)}
+              onToggle={() => toggleTimer(bucket.id)}
+              onArchive={() => archiveBucket(bucket.id)}
+            />
+          ))}
+        </CardContent>
+      </Card>
+
       <StatsStrip logs={state.logs} buckets={visibleBuckets} activeCount={state.activeTimers.length} />
 
       <section className="layout-grid">
         <div className="primary-column">
-          <Card className="panel-card">
-            <CardHeader className="panel-header-row">
-              <div>
-                <CardTitle>Buckets</CardTitle>
-                <CardDescription>Start or stop any activity in one tap. Simultaneous timers are allowed.</CardDescription>
-              </div>
-              <form
-                className="bucket-create-row"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  createBucket(bucketDraft);
-                  setBucketDraft("");
-                }}
-              >
-                <Input
-                  value={bucketDraft}
-                  onChange={(e) => setBucketDraft(e.target.value)}
-                  placeholder="Add bucket"
-                />
-                <Button type="submit" variant="secondary" size="icon" aria-label="Add bucket">
-                  <Plus />
-                </Button>
-              </form>
-            </CardHeader>
-            <CardContent className="bucket-grid">
-              {visibleBuckets.map((bucket) => (
-                <BucketCard
-                  key={bucket.id}
-                  bucket={bucket}
-                  isActive={activeBucketIds.has(bucket.id)}
-                  elapsedSeconds={getElapsedSeconds(bucket.id)}
-                  onToggle={() => toggleTimer(bucket.id)}
-                  onArchive={() => archiveBucket(bucket.id)}
-                />
-              ))}
-            </CardContent>
-          </Card>
 
           <DailyLogs
             logs={[...state.logs].sort((a, b) => +new Date(b.startTime) - +new Date(a.startTime))}

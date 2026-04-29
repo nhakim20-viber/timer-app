@@ -250,20 +250,78 @@
     @apply grid gap-3 md:grid-cols-2;
   }
 
-  .bucket-panel {
-    @apply relative overflow-hidden border border-border p-4;
-    border-radius: 1rem;
-    background: linear-gradient(180deg, color-mix(in oklab, var(--card) 92%, transparent), var(--surface-soft));
+  .bucket-grid-large {
+    @apply grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
   }
 
-  .bucket-panel::after {
-    content: "";
-    @apply pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full opacity-0 transition-opacity duration-300;
-    background: color-mix(in oklab, var(--accent) 40%, transparent);
+  .buckets-hero-card {
+    @apply p-2 sm:p-4;
   }
 
-  .bucket-panel.is-active::after {
-    @apply opacity-100 motion-safe:animate-pulse;
+  .bucket-tile-wrap {
+    @apply relative;
+  }
+
+  .bucket-tile {
+    @apply flex w-full flex-col items-start justify-between gap-3 border border-border p-6 text-left transition-all duration-200;
+    min-height: 11rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(180deg, color-mix(in oklab, var(--card) 94%, transparent), var(--surface-soft));
+    box-shadow: var(--shadow-soft), var(--shadow-line);
+    cursor: pointer;
+  }
+
+  .bucket-tile:hover {
+    @apply -translate-y-0.5;
+    box-shadow: 0 22px 48px -22px color-mix(in oklab, var(--tone-color, var(--foreground)) 45%, transparent), var(--shadow-line);
+  }
+
+  .bucket-tile:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  .bucket-tile-wrap.is-active .bucket-tile {
+    background: linear-gradient(160deg, color-mix(in oklab, var(--tone-color, var(--accent)) 28%, var(--card)), var(--card));
+    border-color: color-mix(in oklab, var(--tone-color, var(--accent)) 55%, var(--border));
+  }
+
+  .bucket-tile-icon {
+    @apply inline-flex h-12 w-12 items-center justify-center rounded-full;
+    background: color-mix(in oklab, var(--tone-color, var(--accent)) 22%, var(--background));
+    color: var(--tone-color, var(--foreground));
+  }
+
+  .bucket-tile-wrap.is-active .bucket-tile-icon {
+    background: var(--tone-color, var(--accent));
+    color: var(--primary-foreground);
+  }
+
+  .bucket-tile-icon svg {
+    @apply h-7 w-7;
+  }
+
+  .bucket-tile-name {
+    @apply text-2xl font-semibold leading-tight text-foreground;
+    font-family: var(--font-display);
+  }
+
+  .bucket-tile-time {
+    @apply text-3xl leading-none text-foreground;
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bucket-tile-status {
+    @apply text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground;
+  }
+
+  .bucket-tile-archive {
+    @apply absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background/80 text-muted-foreground opacity-0 transition-all hover:text-foreground;
+  }
+
+  .bucket-tile-wrap:hover .bucket-tile-archive,
+  .bucket-tile-archive:focus-visible {
+    @apply opacity-100;
   }
 
   .bucket-label {
