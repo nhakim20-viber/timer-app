@@ -4,6 +4,7 @@ export type TimeBucket = {
   color: string;
   archivedAt: string | null;
   createdAt: string;
+  presetTags: string[];
 };
 
 export type TimeLog = {
