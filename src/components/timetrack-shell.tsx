@@ -1,12 +1,10 @@
 import * as React from "react";
 import {
-  BarChart3,
   CalendarDays,
   Clock3,
   PauseCircle,
   PlayCircle,
   Plus,
-  Tags,
   Trash2,
 } from "lucide-react";
 
@@ -386,12 +384,8 @@ export function TimeTrackShell() {
     <main className="timetrack-app">
       <section className="hero-band">
         <div className="hero-copy">
-          <p className="eyebrow">TimeTrack · Web MVP</p>
-          <h1>Personal time logging without judgment.</h1>
-          <p className="hero-text">
-            Run multiple buckets at once, correct your logs later, and read the patterns without goals,
-            nudges, or scorekeeping.
-          </p>
+          <p className="eyebrow">TimeTrack</p>
+          <h1>Track your time.</h1>
         </div>
 
         <div className="hero-status-card">
@@ -530,35 +524,7 @@ export function TimeTrackShell() {
             </CardContent>
           </Card>
 
-          <Card className="panel-card utility-card">
-            <CardHeader>
-              <CardTitle>Design principles</CardTitle>
-              <CardDescription>Translated directly from the PRD.</CardDescription>
-            </CardHeader>
-            <CardContent className="principles-list">
-              <div>
-                <PlayCircle />
-                <div>
-                  <strong>Frictionless entry</strong>
-                  <p>Start from the home view in a single click.</p>
-                </div>
-              </div>
-              <div>
-                <Tags />
-                <div>
-                  <strong>Cross-bucket tags</strong>
-                  <p>Slice the same tag across podcasts, TV, exercise, and more.</p>
-                </div>
-              </div>
-              <div>
-                <BarChart3 />
-                <div>
-                  <strong>Readable reports</strong>
-                  <p>Tables and bars first; no scores, streaks, or moralizing.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
 
           <ReportPanel logs={state.logs} buckets={bucketMap} />
         </aside>
