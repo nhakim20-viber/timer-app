@@ -398,7 +398,6 @@ export function TimeTrackShell() {
   const {
     state,
     visibleBuckets,
-    bucketMap,
     activeBucketIds,
     tagSuggestions,
     hasMounted,
@@ -406,7 +405,6 @@ export function TimeTrackShell() {
     createBucket,
     archiveBucket,
     addManualLog,
-    updateLog,
     getElapsedSeconds,
     toggleActiveTimerTag,
     addBucketTag,
