@@ -52,11 +52,6 @@ function formatDurationCompact(totalSeconds: number) {
   return `${(totalSeconds / 3600).toFixed(totalSeconds >= 3600 ? 1 : 2)}h`;
 }
 
-function startOfDay(value: string) {
-  const date = new Date(value);
-  date.setHours(0, 0, 0, 0);
-  return date.getTime();
-}
 
 function toLocalDateTimeValue(date: Date) {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
