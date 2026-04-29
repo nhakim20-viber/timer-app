@@ -386,12 +386,8 @@ export function TimeTrackShell() {
     <main className="timetrack-app">
       <section className="hero-band">
         <div className="hero-copy">
-          <p className="eyebrow">TimeTrack · Web MVP</p>
-          <h1>Personal time logging without judgment.</h1>
-          <p className="hero-text">
-            Run multiple buckets at once, correct your logs later, and read the patterns without goals,
-            nudges, or scorekeeping.
-          </p>
+          <p className="eyebrow">TimeTrack</p>
+          <h1>Track your time.</h1>
         </div>
 
         <div className="hero-status-card">
