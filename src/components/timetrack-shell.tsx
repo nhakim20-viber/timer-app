@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
   CalendarDays,
-  Clock3,
   PauseCircle,
   PlayCircle,
   Plus,
@@ -377,39 +376,10 @@ export function TimeTrackShell() {
     setManualEnd((current) => current || toLocalDateTimeValue(new Date()));
   }, [hasMounted]);
 
-  const activeNow = state.activeTimers
-    .map((timer) => ({ ...timer, bucket: bucketMap[timer.bucketId] }))
-    .filter((timer) => timer.bucket);
+
 
   return (
     <main className="timetrack-app">
-      <section className="hero-band">
-        <div className="hero-copy">
-          <p className="eyebrow">TimeTrack</p>
-          <h1>Track your time.</h1>
-        </div>
-
-        <div className="hero-status-card">
-          <div className="status-header">
-            <Clock3 />
-            <span>Running now</span>
-          </div>
-          {activeNow.length === 0 ? (
-            <div className="empty-state compact">No active timers.</div>
-          ) : (
-            activeNow.map((timer) => (
-              <div key={timer.bucketId} className="running-row">
-                <div>
-                  <strong>{timer.bucket?.name}</strong>
-                  <span>{formatDuration(getElapsedSeconds(timer.bucketId))}</span>
-                </div>
-                <div className={`tone-dot ${bucketToneClass(timer.bucket?.color ?? "ink")}`} />
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-
       <Card className="panel-card buckets-hero-card">
         <CardHeader className="panel-header-row">
           <div>
