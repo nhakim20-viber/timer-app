@@ -13,6 +13,29 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTimeTrack } from "@/hooks/use-timetrack";
 import type { ReportWindow, TimeBucket, TimeLog } from "@/lib/timetrack-types";
+import { Link } from "@tanstack/react-router";
+
+export function TimeTrackNav() {
+  return (
+    <nav className="timetrack-nav" aria-label="Primary">
+      <Link
+        to="/"
+        activeOptions={{ exact: true }}
+        activeProps={{ className: "timetrack-nav-link is-active" }}
+        inactiveProps={{ className: "timetrack-nav-link" }}
+      >
+        Timers
+      </Link>
+      <Link
+        to="/reports"
+        activeProps={{ className: "timetrack-nav-link is-active" }}
+        inactiveProps={{ className: "timetrack-nav-link" }}
+      >
+        Reports
+      </Link>
+    </nav>
+  );
+}
 
 function formatDuration(totalSeconds: number) {
   const hours = Math.floor(totalSeconds / 3600);
